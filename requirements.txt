@@ -1,0 +1,7 @@
+openai
+instructor
+python-pptx
+pdfplumber
+pydantic
+streamlit
+retrying
