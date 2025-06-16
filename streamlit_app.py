@@ -1,37 +1,31 @@
 import streamlit as st
-import os
+from extractor import extract_hierarchical_summary
+from ppt_generator import generate_hierarchical_ppt
 from pdf_reader import extract_text_from_pdf
-from extractor import extract_sections
-from pptx import Presentation
-from mapper import map_to_slide_content
-from ppt_generator import generate_final_ppt_with_analysis
-from config import Config
+from schemas import PosterSummary
 
-os.makedirs("templates", exist_ok=True)
-os.makedirs("output", exist_ok=True)
+st.title("AI Poster to PPT Generator 🚀")
 
-st.title("AI-powered Poster to PPT Generator")
+uploaded_pdf = st.file_uploader("Upload your Poster PDF", type=["pdf"])
+uploaded_template = st.file_uploader("Upload your PPT Template", type=["pptx"])
+uploaded_image = st.file_uploader("Upload Image for Slide 1", type=["jpg", "jpeg", "png"])
 
-uploaded_pdf = st.file_uploader("Upload Poster PDF", type=["pdf"])
-uploaded_template = st.file_uploader("Upload PPT Template", type=["pptx"])
-
-if uploaded_pdf and uploaded_template:
-    pdf_path = "uploaded_poster.pdf"
-    template_path = "templates/Poster_Slide_Generated.pptx"
-
-    with open(pdf_path, "wb") as f:
+if uploaded_pdf and uploaded_template and uploaded_image:
+    with open("poster.pdf", "wb") as f:
         f.write(uploaded_pdf.getbuffer())
-    with open(template_path, "wb") as f:
+    with open("template.pptx", "wb") as f:
         f.write(uploaded_template.getbuffer())
+    with open("image.jpg", "wb") as f:
+        f.write(uploaded_image.getbuffer())
 
-    st.success("Files uploaded successfully!")
+    st.write("📄 Extracting text...")
+    raw_text = extract_text_from_pdf("poster.pdf")
+    
+    st.write(" Extracting hierarchical summary...")
+    summary = extract_hierarchical_summary(raw_text)
 
-    poster_text = extract_text_from_pdf(pdf_path)
-    extracted_sections = extract_sections(poster_text)
-    template = Presentation(template_path)
-    slide_content = map_to_slide_content(extracted_sections, template)
+    st.write(" Generating PPT...")
+    generate_hierarchical_ppt(summary, "template.pptx", "generated.pptx", "image.jpg")
 
-    generate_final_ppt_with_analysis(slide_content)
-
-    with open(Config.OUTPUT_PATH, "rb") as f:
-        st.download_button("Download Generated PPT", f, file_name="final_generated.pptx")
+    with open("generated.pptx", "rb") as f:
+        st.download_button("📥 Download Generated PPT", f, file_name="generated.pptx")
