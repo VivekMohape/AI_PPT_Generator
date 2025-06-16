@@ -4,7 +4,7 @@ from ppt_generator import generate_hierarchical_ppt
 from pdf_reader import extract_text_from_pdf
 from schemas import PosterSummary
 
-st.title("AI Poster to PPT Generator 🚀")
+st.title("AI PPT Generator ")
 
 uploaded_pdf = st.file_uploader("Upload your Poster PDF", type=["pdf"])
 uploaded_template = st.file_uploader("Upload your PPT Template", type=["pptx"])
