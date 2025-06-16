@@ -1,19 +1,10 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List
 
 class Section(BaseModel):
     heading: str
-    content: str
+    bullets: List[str]
 
-class PosterExtraction(BaseModel):
-    sections: List[Section]
-
-class SlideContent(BaseModel):
-    slide_type: str
+class PosterSummary(BaseModel):
     title: str
-    content: dict
-
-class AdjustmentRecommendation(BaseModel):
-    summarize: bool
-    shrink_font: bool
-    new_font_size: Optional[int]
+    sections: List[Section]
