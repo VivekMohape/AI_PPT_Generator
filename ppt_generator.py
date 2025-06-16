@@ -3,7 +3,7 @@ from pptx import Presentation
 from pptx.util import Pt
 from pptx.dml.color import RGBColor
 
-# ================= Helpers =================
+# Helpers
 
 def flatten_sections(sections):
     flattened = []
@@ -47,7 +47,7 @@ def chunk_sections(flat_sections, chunk_size):
             all_pairs.append((heading, bullet))
     return [all_pairs[i:i + chunk_size] for i in range(0, len(all_pairs), chunk_size)]
 
-# ================= Main PPT Generator =================
+# Main PPT Generator
 
 def generate_hierarchical_ppt(summary, template_path, output_path, image_path):
     prs = Presentation(template_path)
